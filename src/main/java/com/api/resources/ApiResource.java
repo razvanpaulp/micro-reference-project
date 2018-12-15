@@ -4,6 +4,7 @@ import com.api.resources.definition.OpenApiInterface;
 import com.async.support.AppExecutors;
 import com.model.Message;
 import com.service.ApiService;
+import com.web.json.JsonResponse;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -40,8 +41,9 @@ public class ApiResource implements OpenApiInterface {
 	@GET
 	@Path("hello/v2")
 	public Message sayPojoHello() {
-		return new Message("This is a custom hello message.");
+		return new Message("Hello again!.");
 	}
+	
 
 	@Override
 	@GET
@@ -52,5 +54,15 @@ public class ApiResource implements OpenApiInterface {
 		computeAsync(() -> service.buildHelloMessage(name), executorService)
 				.thenApplyAsync(result -> asyncResponse.resume(Response.ok().entity(result).build()), executorService)
 				.exceptionally(error -> asyncResponse.resume(Response.status(400).entity(new Message(error.getMessage())).build()));
+	}
+	
+	@Override
+	@GET
+	@Path("json")
+	public JsonResponse sayJson() {
+		 return new JsonResponse()
+	               .with("Question", "Have you been a good boy ?")
+	               .with("Answer", "Well..")
+	               .done();
 	}
 }

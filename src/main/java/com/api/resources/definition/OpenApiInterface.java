@@ -1,6 +1,8 @@
 package com.api.resources.definition;
 
 import com.model.Message;
+import com.web.json.JsonResponse;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -25,7 +27,7 @@ public interface OpenApiInterface extends ApiInterface {
 	Response sayHello();
 	
 	@Override
-	@Operation(summary = "Returns a custom hello message.", tags = { "Hello Api", },
+	@Operation(summary = "Returns a Java Object containg a greetings message.", tags = { "Hello Api", },
 			responses = {
 					@ApiResponse(responseCode = "200", description = "Returns a greetings message.",
 							content = @Content(mediaType = "application/json",
@@ -44,4 +46,13 @@ public interface OpenApiInterface extends ApiInterface {
 			+ "hello message.",
 			schema = @Schema(type = "String", example = "John"), required = true) 
 			String name, AsyncResponse asyncResponse);
+	
+	
+	@Override
+	@Operation(summary = "Returns a json message.", tags = { "Json response", },
+			responses = {
+					@ApiResponse(responseCode = "200", description = "Returns a json.",
+							content = @Content(mediaType = "application/json",
+									schema = @Schema(implementation = JsonResponse.class)))})
+	JsonResponse sayJson();
 }
