@@ -22,6 +22,7 @@ import io.undertow.UndertowOptions;
 import io.undertow.server.HttpHandler;
 import io.undertow.server.handlers.GracefulShutdownHandler;
 import io.undertow.server.handlers.PathHandler;
+import io.undertow.server.handlers.StuckThreadDetectionHandler;
 import io.undertow.server.handlers.resource.ClassPathResourceManager;
 import io.undertow.server.handlers.resource.ResourceHandler;
 import io.undertow.servlet.api.DeploymentInfo;
@@ -33,16 +34,17 @@ import io.undertow.websockets.core.BufferedTextMessage;
 import io.undertow.websockets.core.WebSocketChannel;
 import io.undertow.websockets.core.WebSockets;
 import io.undertow.websockets.spi.WebSocketHttpExchange;
-
+import static com.cloud.support.DeploymentConfiguration.getProperty;
 import static io.undertow.Handlers.websocket;
 
 public final class UndertowServer {
 
+	public final Lock LOCK = new ReentrantLock();
+	
 	private final String host;
 	private final int port;
 	private final String deploymentName;
-	public final Lock LOCK = new ReentrantLock();
-
+	
 	private volatile Undertow server;
 
 	public UndertowServer(String host, int port, String deploymentName){
@@ -57,6 +59,7 @@ public final class UndertowServer {
 				.setContextPath("/")
 				.addListeners(listener(Listener.class))
 				.setResourceManager(new ClassPathResourceManager(Server.class.getClassLoader(), "webapp/resources"))
+				.addWelcomePage("index.html")
 				.setDeploymentName(deploymentName)
 				.addServlets(
 						servlet("jerseyServlet", ServletContainer.class)
@@ -107,8 +110,10 @@ public final class UndertowServer {
 
 
 	public void start() throws ServletException{
+		
 		final HttpHandler httpHandler = bootstrap();
-		final GracefulShutdownHandler shutdown = Handlers.gracefulShutdown(httpHandler);
+		final StuckThreadDetectionHandler stuck = new StuckThreadDetectionHandler(getProperty("thread.execution.time", 100), httpHandler);
+		final GracefulShutdownHandler shutdown = Handlers.gracefulShutdown(stuck);
 
 		LOCK.lock();
 
@@ -124,6 +129,7 @@ public final class UndertowServer {
 
 
 	public void stop() {
+		
 		server.stop();
 		LOCK.unlock();
 	}

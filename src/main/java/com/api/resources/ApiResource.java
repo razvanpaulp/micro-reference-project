@@ -18,6 +18,7 @@ import javax.ws.rs.core.Response;
 
 import static com.async.support.Computation.computeAsync;
 
+import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 
 @RequestScoped
@@ -60,9 +61,15 @@ public class ApiResource implements OpenApiInterface {
 	@GET
 	@Path("json")
 	public JsonResponse sayJson() {
+		HashMap<String, String> player = new HashMap<String, String>() {
+			private static final long serialVersionUID = 1L;{
+		    put("Name","Novak");
+		    put("Surname", "Djokovic");
+		}};
 		 return new JsonResponse()
-	               .with("Question", "Have you been a good boy ?")
-	               .with("Answer", "Well..")
+				   .with("Competition", "WTA")
+	               .with("Rank", 1)
+	               .with("Player", player)
 	               .done();
 	}
 }

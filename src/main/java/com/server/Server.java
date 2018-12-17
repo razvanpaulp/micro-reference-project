@@ -13,13 +13,13 @@ public class Server {
 			throws ServletException {
 
 		final String  host = getProperty("undertow.host", "localhost");
-		final Integer port = Integer.valueOf(getProperty("undertow.port", "8080"));
+		final Integer port = getProperty("undertow.port", 8080);
 
 		final UndertowServer server = new UndertowServer(host, port, "micro-reference-project.war");
 		
 		final Condition newCondition = server.LOCK.newCondition();
+		
 		server.start();
-
 		try {
 			while( true )
 				newCondition.awaitNanos(1);

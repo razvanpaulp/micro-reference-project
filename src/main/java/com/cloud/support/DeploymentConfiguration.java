@@ -8,12 +8,16 @@ import java.util.function.Function;
  * fallback. Useful in Cloud Native (Docker / Kubernetes) deployments.
  *
  */
-public interface DeploymentConfiguration {
+public interface DeploymentConfiguration<T> {
 
-	Function<String, String> ENV = (key) -> System.getenv().getOrDefault(key, System.getProperty(key));
+	final Function<String, String> ENV = (key) -> System.getenv().getOrDefault(key, System.getProperty(key));
 
-	static String getProperty(String key, String fallback) {
-		String value = ENV.apply(key);
+	
+	@SuppressWarnings("unchecked")
+	static<T> T getProperty(String key, T fallback) {
+		String type =  fallback != null ? fallback.getClass().getSimpleName().toUpperCase() : "STRING";
+		T value = (T) PropertyTypes.valueOf(type).getValue(key, ENV);
+		
 		return Optional.ofNullable( value ).orElse( fallback );
 	}
 }
