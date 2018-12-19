@@ -1,7 +1,7 @@
 package com.api.resources;
 
 import com.api.resources.definition.OpenApiInterface;
-import com.async.support.AppExecutors;
+import com.support.async.AppExecutors;
 import com.model.Message;
 import com.service.ApiService;
 import com.web.json.JsonResponse;
@@ -16,7 +16,7 @@ import javax.ws.rs.container.AsyncResponse;
 import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.Response;
 
-import static com.async.support.Computation.computeAsync;
+import static com.support.async.Computation.computeAsync;
 
 import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
@@ -72,5 +72,12 @@ public class ApiResource implements OpenApiInterface {
 					.with("Rank", 1)
 					.with("Player", player)
 					.done();
+	}
+
+	@Override
+	@GET
+	@Path("getMessageFromStorage")
+	public Message getMessageFromStorage() {
+		return service.getMessageFromStorage();
 	}
 }

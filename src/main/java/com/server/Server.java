@@ -2,7 +2,7 @@ package com.server;
 
 import javax.servlet.ServletException;
 import com.undertow.standalone.UndertowServer;
-import static com.cloud.support.DeploymentConfiguration.getProperty;
+import static com.support.cloud.DeploymentConfiguration.getProperty;
 
 import java.util.concurrent.locks.Condition;
 

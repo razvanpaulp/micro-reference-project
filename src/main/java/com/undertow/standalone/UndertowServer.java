@@ -34,7 +34,7 @@ import io.undertow.websockets.core.BufferedTextMessage;
 import io.undertow.websockets.core.WebSocketChannel;
 import io.undertow.websockets.core.WebSockets;
 import io.undertow.websockets.spi.WebSocketHttpExchange;
-import static com.cloud.support.DeploymentConfiguration.getProperty;
+import static com.support.cloud.DeploymentConfiguration.getProperty;
 import static io.undertow.Handlers.websocket;
 
 public final class UndertowServer {
@@ -62,7 +62,7 @@ public final class UndertowServer {
 				.addWelcomePage("index.html")
 				.setDeploymentName(deploymentName)
 				.addServlets(
-						servlet("jerseyServlet", ServletContainer.class)
+				servlet("jerseyServlet", ServletContainer.class)
 						.addInitParam("javax.ws.rs.Application", ApplicationConfig.class.getName())
 						.addMapping("/api/*")
 						.setLoadOnStartup(1)

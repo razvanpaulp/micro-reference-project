@@ -18,4 +18,7 @@ public interface ApiInterface {
 	void sayParametrizedHello(String name, AsyncResponse asyncResponse);
 
 	JsonResponse sayJson();
+
+	Message getMessageFromStorage();
+
 }

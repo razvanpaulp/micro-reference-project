@@ -1,4 +1,4 @@
-package com.async.support;
+package com.support.async;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;

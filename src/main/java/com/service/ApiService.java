@@ -7,4 +7,5 @@ public interface ApiService {
 	Message buildHelloMessage(String name)
 			throws Exception;
 
+	Message getMessageFromStorage();
 }

@@ -55,4 +55,12 @@ public interface OpenApiInterface extends ApiInterface {
 							content = @Content(mediaType = "application/json",
 									schema = @Schema(implementation = JsonResponse.class)))})
 	JsonResponse sayJson();
+
+	@Override
+	@Operation(summary = "Returns a Java Object from underlying storage.", tags = { "Hello Api", },
+			responses = {
+					@ApiResponse(responseCode = "200", description = "Returns a greetings message.",
+							content = @Content(mediaType = "application/json",
+									schema = @Schema(implementation = Message.class)))})
+	Message getMessageFromStorage();
 }
