@@ -62,5 +62,5 @@ public interface OpenApiInterface extends ApiInterface {
 					@ApiResponse(responseCode = "200", description = "Returns a greetings message.",
 							content = @Content(mediaType = "application/json",
 									schema = @Schema(implementation = Message.class)))})
-	Message getMessageFromStorage();
+	void getMessageFromStorage(long id, AsyncResponse asyncResponse);
 }

@@ -19,6 +19,6 @@ public interface ApiInterface {
 
 	JsonResponse sayJson();
 
-	Message getMessageFromStorage();
+	void getMessageFromStorage(long id, AsyncResponse asyncResponse);
 
 }

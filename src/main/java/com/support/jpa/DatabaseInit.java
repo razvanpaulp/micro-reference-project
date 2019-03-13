@@ -2,36 +2,35 @@ package com.support.jpa;
 
 import com.model.Message;
 
-import javax.annotation.PostConstruct;
 import javax.enterprise.context.ApplicationScoped;
-import javax.enterprise.context.Initialized;
-import javax.enterprise.event.Observes;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
+import javax.transaction.Transactional;
 
 @ApplicationScoped
+@Transactional
 public class DatabaseInit {
 
 	@Inject
-	private EntityManager entityManager;
+	private EntityManagerProducer entityManagerProducer;
 	
-	private void initDatabase(@Observes @Initialized(ApplicationScoped.class) Object init) {
-		createTable();
-		insertData();
-	}
-
-	private void createTable() {
+	public void init() {
+		EntityManager entityManager = entityManagerProducer.createEntityManager();
 		entityManager.getTransaction().begin();
+
 		entityManager
-				.createNativeQuery("CREATE TABLE IF NOT EXISTS message(id INTEGER NOT NULL, response varchar(255))")
+				.createNativeQuery("CREATE TABLE IF NOT EXISTS MESSAGE(id INTEGER NOT NULL, response varchar(255))")
+				.executeUpdate();
+		entityManager
+				.createNativeQuery("CREATE TABLE IF NOT EXISTS MESSAGECOUNTER(id INTEGER NOT NULL, count INTEGER NOT " 
+						+ "NULL, messageId INTEGER NOT NULL)")
 				.executeUpdate();
 
-		entityManager.getTransaction().commit();
-	}
+		entityManager.persist(new Message(1, "This is message 1"));
+		entityManager.persist(new Message(2, "This is message 2"));
+		entityManager.persist(new Message(3, "This is message 3"));
 
-	private void insertData() {
-		entityManager.getTransaction().begin();
-		entityManager.persist(new Message(1, "TEST"));
 		entityManager.getTransaction().commit();
+		entityManager.close();
 	}
 }
