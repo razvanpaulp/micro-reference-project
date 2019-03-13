@@ -89,8 +89,9 @@ public class ApiResource implements OpenApiInterface {
 	public void getMessageWithCounter(@QueryParam("id") long id, @Suspended AsyncResponse asyncResponse) {
 		ExecutorService executorService = appExecutors.getExecutorService();
 
-		Message result = apiService.getMessageWithCounter(id);
-		asyncResponse.resume(Response.ok().entity(result).build());
+		computeAsync(() ->  apiService.getMessageWithCounter(id), executorService)
+				.thenApplyAsync(result -> asyncResponse.resume(Response.ok().entity(result).build()), executorService)
+				.exceptionally(error -> asyncResponse.resume(Response.status(400).entity(new Message(error.getMessage())).build()));
 	}
 
 }

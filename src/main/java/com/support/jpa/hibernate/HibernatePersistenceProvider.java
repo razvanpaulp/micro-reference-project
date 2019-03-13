@@ -1,6 +1,8 @@
 package com.support.jpa.hibernate;
 
 import com.google.common.collect.ImmutableMap;
+import com.model.Message;
+import com.model.MessageCounter;
 import com.support.jpa.AppPersistenceProvider;
 import com.support.jpa.DataSourceProducer;
 import com.support.jpa.DatabaseInit;
@@ -22,6 +24,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
@@ -118,13 +121,17 @@ public class HibernatePersistenceProvider implements AppPersistenceProvider {
 
 			@Override
 			public List<String> getManagedClassNames() {
-				return Collections.emptyList();
+				List<String> entities = new ArrayList<>();
+				entities.add(Message.class.getName());
+				entities.add(MessageCounter.class.getName());
+				return entities;
 			}
 
 			@Override
 			public boolean excludeUnlistedClasses() {
-				return false;
+				return true;
 			}
+
 
 			@Override
 			public SharedCacheMode getSharedCacheMode() {
